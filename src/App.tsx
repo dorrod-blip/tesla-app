@@ -16,12 +16,12 @@ function App() {
     const [isLoggedIn, setIsLoggedIn] = useLocalStorage("isLoggedIn", false);
     const [profile, setProfile] = useLocalStorage("profile", {});
     
-    const getAccessible = async () => {
+    const registerAccount = async () => {
         try {
             const response = await axios.get(
-                `${process.env.REACT_APP_BACKEND_API}/auth/profile?access_token=${accessToken}`
+                `${process.env.REACT_APP_BACKEND_API}/auth/register?access_token=${accessToken}`
             );
-            if (response.data) {
+            if (response.data?.domain) {
                 setIsLoggedIn(true);
                 setProfile(response.data);
             }
@@ -30,7 +30,8 @@ function App() {
     };
     useEffect(() => {
         if (accessToken) {
-            getAccessible();
+            // registerAccount();
+            setIsLoggedIn(true);
         }
     }, [accessToken]);
     return (
