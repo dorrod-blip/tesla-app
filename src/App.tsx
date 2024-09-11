@@ -31,7 +31,7 @@ function App() {
     useEffect(() => {
         if (accessToken) {
             // registerAccount();
-            setIsLoggedIn(true);
+            // setIsLoggedIn(true);
         }
     }, [accessToken]);
     return (
