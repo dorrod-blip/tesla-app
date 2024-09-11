@@ -4,7 +4,7 @@ import withAuth from '../../hoc/with-auth-redirect';
 const Login = () => {
     const handleLoginWithOauth = () => {
         // @ts-ignore
-        window.location.href = process.env.REACT_APP_BACKEND_API + "/auth/trello";
+        window.location.href = process.env.REACT_APP_BACKEND_API + "/auth/tesla";
     };
     return (
         <div className="flex justify-center items-center h-screen">

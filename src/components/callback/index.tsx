@@ -10,13 +10,19 @@ const Callback = () => {
     let [searchParams] = useSearchParams();
     const handleCallback = async () => {
         try {
-            const params = new URLSearchParams(window.location.hash.substr(1));
-            const token = params.get('token');
-            if (token?.length) {
-                setAccessToken(token);
+            const result: any = await axios.get(
+                `${
+                    process.env.REACT_APP_BACKEND_API
+                }/auth/callback?${searchParams.toString()}`
+            );
+            console.log('access_token', result.data.access_token);
+
+            if (result?.data.access_token) {
+                setAccessToken(result.data.access_token);
                 navigate("/")
             }
         } catch (error) {
+            console.log(error);
         }
     };
 
