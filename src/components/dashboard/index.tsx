@@ -174,14 +174,14 @@ const Dashboard = () => {
                                                                 <div className="flex gap-2 p-4 pl-8">
                                                                     <button
                                                                     onClick={() => {
-                                                                        if (vehicle?.locked) {
+                                                                        if (vehicle?.isLocked) {
                                                                             unlock(vehicle?.vin)
                                                                         } else {
                                                                             lock(vehicle?.vin)
                                                                         }
                                                                     }}
                                                                     className="px-3 text-sm font-semibold text-green-600 rounded cursor-pointer lg:px-4 dark:text-green-500 hover:underline"
-                                                                    >{vehicle?.locked ? 'Lock' : 'Unlock'}</button>
+                                                                    >{vehicle?.isLocked ? 'Unlock' : 'Lock'}</button>
                                                                 </div>
                                                             </td>
                                                         </tr>
