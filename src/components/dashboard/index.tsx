@@ -112,6 +112,7 @@ const Dashboard = () => {
                 vehicles.map((item: any) => {
                     if (item.vin == vin) {
                         item.isLocked = false;
+                        console.log("a vehicle: ", item);
                         return;
                     }
                 });
