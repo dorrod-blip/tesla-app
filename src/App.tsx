@@ -6,10 +6,7 @@ import Callback from "./components/callback";
 import axios from "axios";
 import { useLocalStorage } from "./hooks/useLocalstorage";
 import { useEffect } from "react";
-import Portals from "./components/portals";
-import Projects from "./components/projects";
-import ProjectTasks from "./components/tasks";
-// import { ToastContainer } from "react-toastify";
+import Dashboard from "./components/dashboard";
 
 function App() {
     const [accessToken] = useLocalStorage("access_token", "");
@@ -31,7 +28,7 @@ function App() {
     useEffect(() => {
         if (accessToken) {
             // registerAccount();
-            // setIsLoggedIn(true);
+            setIsLoggedIn(true);
         }
     }, [accessToken]);
     return (
@@ -40,10 +37,7 @@ function App() {
                 <Route path="/login" element={<Login />} />
                 <Route path="/" element={<Navigate replace to="/login" />} />
                 <Route path="/callback" element={<Callback />} />
-                <Route path="/projects" element={<Portals />} />
-                {/* <Route path="/portals/:portalId/projects/:projectId/tasks" element={<ProjectTasks />} /> */}
-                <Route path="/portals/:boardID/tasks" element={<ProjectTasks />} />
-                <Route path=":portalId/projects" element={<Projects />} />
+                <Route path="/dashboard" element={<Dashboard />} />
             </Routes>
             {/* <ToastContainer /> */}
         </div>

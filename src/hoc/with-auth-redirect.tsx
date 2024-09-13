@@ -15,7 +15,7 @@ const withAuth = <P extends object>(
 
         useEffect(() => {
             if (isLoggedIn && ['/login','/callback'].includes(window.location.pathname)) {
-                navigate("/projects");
+                navigate("/dashboard");
             }
             if (!isLoggedIn) {
                 navigate("/login");
