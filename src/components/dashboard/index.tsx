@@ -85,6 +85,7 @@ const Dashboard = () => {
             const result: any = await axios.get(
                 `${process.env.REACT_APP_BACKEND_API}/dashboard/lock?access_token=${accessToken}&vin=${vin}`
             );
+            console.log("lock: ", result);
             if (result?.data) {
                 console.log("lock data: ", result.data);
                 vehicles.map((item: any) => {
@@ -105,11 +106,12 @@ const Dashboard = () => {
             const result: any = await axios.get(
                 `${process.env.REACT_APP_BACKEND_API}/dashboard/unlock?access_token=${accessToken}&vin=${vin}`
             );
+            console.log("unlock: ", result);
             if (result?.data) {
                 console.log("unlock data: ", result.data);
                 vehicles.map((item: any) => {
                     if (item.vin == vin) {
-                        item.isLocked = true;
+                        item.isLocked = false;
                         return;
                     }
                 });
