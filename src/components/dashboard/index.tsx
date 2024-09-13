@@ -88,13 +88,15 @@ const Dashboard = () => {
             console.log("lock: ", result);
             if (result?.data.result) {
                 console.log("lock data: ", result.data);
-                vehicles.map((item: any) => {
-                    if (item.vin == vin) {
-                        item.isLocked = true;
-                        return;
+                const updatedVehicles = vehicles.map((item: any) => {
+                    if (item.vin === vin) {
+                        return { ...item, isLocked: true }; // Create a new object with isLocked set to true
                     }
+                    return item; // Return the original item for others
                 });
-                setVehicles(vehicles);
+                
+                setVehicles(updatedVehicles); // Update the state with the new array
+                
             }
         } catch (error) { 
             console.log("lock error: ", error);  
@@ -109,14 +111,15 @@ const Dashboard = () => {
             console.log("unlock: ", result);
             if (result?.data.result) {
                 console.log("unlock data: ", result.data);
-                vehicles.map((item: any) => {
-                    if (item.vin == vin) {
-                        item.isLocked = false;
-                        console.log("a vehicle: ", item);
-                        return;
+                const updatedVehicles = vehicles.map((item: any) => {
+                    if (item.vin === vin) {
+                        return { ...item, isLocked: false }; // Create a new object with isLocked set to true
                     }
+                    return item; // Return the original item for others
                 });
-                setVehicles(vehicles);
+                
+                setVehicles(updatedVehicles); // Update the state with the new array
+                
             }
         } catch (error) { 
             console.log("unlock error: ", error);  
