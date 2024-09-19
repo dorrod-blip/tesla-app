@@ -127,7 +127,7 @@ const Dashboard = () => {
     }
 
     const keyPairing = () => {
-        window.open('https://www.tesla.com/_ak/tesla-vehicle-app.vercel.app');
+        window.open('https://www.tesla.com/_ak/teslaapi.moovetrax.com');
     }
 
     useEffect(() => {
