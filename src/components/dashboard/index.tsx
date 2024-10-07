@@ -82,6 +82,8 @@ const Dashboard = () => {
 
     const lock = async (vin: any) => {
         try {
+            if (!vin)
+                return;
             const result: any = await axios.get(
                 `${process.env.REACT_APP_BACKEND_API}/dashboard/lock?access_token=${accessToken}&vin=${vin}`
             );
@@ -105,6 +107,8 @@ const Dashboard = () => {
 
     const unlock = async (vin: any) => {
         try {
+            if (!vin)
+                return;
             const result: any = await axios.get(
                 `${process.env.REACT_APP_BACKEND_API}/dashboard/unlock?access_token=${accessToken}&vin=${vin}`
             );
@@ -123,6 +127,19 @@ const Dashboard = () => {
             }
         } catch (error) { 
             console.log("unlock error: ", error);  
+        }
+    }
+
+    const createTelemetry = async (vin: any) => {
+        try {
+            if (!vin)
+                return;
+            const result: any = await axios.get(
+                `${process.env.REACT_APP_BACKEND_API}/dashboard/createTelemetry?access_token=${accessToken}&vin=${vin}`
+            );
+            console.log("create telemetry data: ", result.data);
+        } catch (error) {
+            console.log("create telemetry error: ", error)
         }
     }
 
@@ -185,6 +202,16 @@ const Dashboard = () => {
                                                                     }}
                                                                     className="px-3 text-sm font-semibold text-green-600 rounded cursor-pointer lg:px-4 dark:text-green-500 hover:underline"
                                                                     >{vehicle?.isLocked ? 'Unlock' : 'Lock'}</button>
+                                                                </div>
+                                                            </td>
+                                                            <td className="p-4 pr-8 text-center border-b border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400"> 
+                                                                <div className="flex gap-2 p-4 pl-8">
+                                                                    <button
+                                                                    onClick={() => {
+                                                                        createTelemetry(vehicle?.vin)
+                                                                    }}
+                                                                    className="px-3 text-sm font-semibold text-green-600 rounded cursor-pointer lg:px-4 dark:text-green-500 hover:underline"
+                                                                    >Create Telemetry</button>
                                                                 </div>
                                                             </td>
                                                         </tr>
