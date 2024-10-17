@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useLocalStorage } from 'usehooks-ts';
 
 type InvoiceProps = {
@@ -75,24 +75,23 @@ const Invoice = ({ showModal, setShowModal, vinId }: InvoiceProps) => {
             if(result){
                 // setShowModal(false)
                 setSubmitLoading(false);
-                // let history :any = [];
                 const history = result.data.data;
-                console.log("history: ", history);
-                console.log("history result: ", result);
                 const extractedData = (Array.isArray(history) ? history : []).map((item) => {
+                    const { chargeStartDateTime, chargeStopDateTime, invoices } = item;
+                
                     return {
-                        invoices: item.invoices.map((invoice: { contentId: any; fileName: any; }) => ({
+                        invoices: Array.isArray(invoices) ? invoices.map((invoice) => ({
                             id: invoice.contentId,
                             fileName: invoice.fileName,
-                            startTime: item.chargeStartDateTime,
-                            endTime: item.chargeStopDateTime,
-                        })),
+                            startTime: chargeStartDateTime,
+                            endTime: chargeStopDateTime,
+                        })) : [],
                     };
                 });
+                
+                setInvoices(extractedData.flatMap((item) => item.invoices));
 
-                setInvoices(extractedData.flatMap((item: { invoices: any; }) => item.invoices));
-
-                console.log("invoices: ", invoices.length);
+                console.log("extractedData: ", extractedData);
             }
         } catch (error:any) {
             console.log("get charging history error: ", error);  
@@ -100,14 +99,33 @@ const Invoice = ({ showModal, setShowModal, vinId }: InvoiceProps) => {
         }
     };
 
+    useEffect(() => {
+        console.log("invoices: ", invoices);
+    }, [invoices]);
+
     const getInvoice = async (id: string) => {
         try {
-            if (contentId == "")
-                return;
+            console.log("get invoice: ", id);
             const result: any = await axios.get(
-                `${process.env.REACT_APP_BACKEND_API}/dashboard/charging?access_token=${accessToken}&id=${id}`
+                `${process.env.REACT_APP_BACKEND_API}/dashboard/invoice?access_token=${accessToken}&id=${id}`, {
+                    responseType: 'blob',
+                    headers: {
+                        'Accept': 'application/pdf',
+                    }
+                }
             );
-            console.log("invoice: ", result.data);
+
+            console.log("invoice data: ", result.data);
+            const url = window.URL.createObjectURL(new Blob([result.data]));
+
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', 'downloadedFile.pdf');
+
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode?.removeChild(link);
+            window.URL.revokeObjectURL(url);
         } catch (error) {
             console.log("get invoice error: ", error);
         }
@@ -132,7 +150,7 @@ const Invoice = ({ showModal, setShowModal, vinId }: InvoiceProps) => {
                         <p className='text-left'>Invoices</p>
                         {   
                             invoices.length &&
-                            <div className="relative overflow-auto rounded-xl">
+                            <div className="max-h-[300px] relative overflow-y-auto overflow-x-auto rounded-xl">
                                 <div className="my-8 shadow-sm">
                                     <table className="w-full text-sm border-collapse table-fixed">
                                         <thead>
@@ -154,12 +172,7 @@ const Invoice = ({ showModal, setShowModal, vinId }: InvoiceProps) => {
                                                         <td className="p-4 pr-8 text-center border-b border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400">{invoice?.endTime ?? 'N/A' }</td>
                                                         <td className="p-4 pr-8 text-center border-b border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400"> 
                                                                 <div className="flex gap-2 p-4 pl-8">
-                                                                    <button
-                                                                    onClick={() => {
-                                                                            getInvoice(invoice?.id)
-                                                                        }
-                                                                    }
-                                                                    className="px-3 text-sm font-semibold text-green-600 rounded cursor-pointer lg:px-4 dark:text-green-500 hover:underline"
+                                                                    <button onClick={() => getInvoice(invoice?.id)} className="px-3 text-sm font-semibold text-green-600 rounded cursor-pointer lg:px-4 dark:text-green-500 hover:underline"
                                                                     >Invoice</button>
                                                                 </div>
                                                             </td>
