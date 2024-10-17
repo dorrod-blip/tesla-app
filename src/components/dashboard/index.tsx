@@ -3,15 +3,16 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { useLocalStorage } from "../../hooks/useLocalstorage";
 import withAuth from "../../hoc/with-auth-redirect";
+import Invoice from "./modal";
 
 const Dashboard = () => {
-    const [profile] = useLocalStorage<any>("profile", {});
-    const [showModal, setShowModal] = useState<boolean>(false)
-    const [portals, setPortals] = useState([]);
-    const [projects, setProjects] = useState([]);
-    const [projectData, setProjectData] = useState({});
-    const [lists, setLists] = useState([]);
-    
+    // const [profile] = useLocalStorage<any>("profile", {});
+    // const [portals, setPortals] = useState([]);
+    // const [projects, setProjects] = useState([]);
+    // const [projectData, setProjectData] = useState({});
+    // const [lists, setLists] = useState([]);
+    const [showModal, setShowModal] = useState<boolean>(false);
+    const [vin, setVin] = useState("");
     // new changes
     
     const navigate = useNavigate();
@@ -26,7 +27,7 @@ const Dashboard = () => {
                 `${process.env.REACT_APP_BACKEND_API}/dashboard/vins/all?access_token=${accessToken}`
             );
             if (result) {
-                let vins: any = []
+                let vins: any = [];
                 vins = result.data;
                 console.log("vins: ", vins);
                 return vins;
@@ -143,6 +144,8 @@ const Dashboard = () => {
         }
     }
 
+    
+
     const keyPairing = () => {
         window.open('https://www.tesla.com/_ak/teslaapi.moovetrax.com');
     }
@@ -182,6 +185,7 @@ const Dashboard = () => {
                                                 <th colSpan={1} className="p-4 pt-0 pb-3 pr-8 font-medium text-center border-b dark:border-slate-600 text-slate-400 dark:text-slate-200 w-[200px]">Vin</th>
                                                 <th colSpan={1} className="p-4 pt-0 pb-3 pr-8 font-medium text-center border-b dark:border-slate-600 text-slate-400 dark:text-slate-200 w-[200px]">Status</th>
                                                 <th colSpan={1} className="p-4 pt-0 pb-3 pr-8 font-medium text-center border-b dark:border-slate-600 text-slate-400 dark:text-slate-200 w-[200px]">Lock/Unlock</th>
+                                                <th colSpan={1} className="p-4 pt-0 pb-3 pr-8 font-medium text-center border-b dark:border-slate-600 text-slate-400 dark:text-slate-200 w-[200px]">Invoice</th>
                                             </thead>
                                             <tbody className="bg-white dark:bg-slate-800">
                                                 {
@@ -206,6 +210,16 @@ const Dashboard = () => {
                                                             </td>
                                                             <td className="p-4 pr-8 text-center border-b border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400"> 
                                                                 <div className="flex gap-2 p-4 pl-8">
+                                                                <button className="px-3 py-2 text-sm font-semibold text-white bg-blue-500 rounded lg:px-4 hover:bg-blue-600" onClick={() => {
+                                                                    if (!vehicle?.vin) 
+                                                                        return;
+                                                                    setVin(vehicle?.vin);
+                                                                    setShowModal(true); 
+                                                                    }}>Get Invoice</button>
+                                                                </div>
+                                                            </td>
+                                                            {/* <td className="p-4 pr-8 text-center border-b border-slate-100 dark:border-slate-700 text-slate-500 dark:text-slate-400"> 
+                                                                <div className="flex gap-2 p-4 pl-8">
                                                                     <button
                                                                     onClick={() => {
                                                                         createTelemetry(vehicle?.vin)
@@ -213,7 +227,7 @@ const Dashboard = () => {
                                                                     className="px-3 text-sm font-semibold text-green-600 rounded cursor-pointer lg:px-4 dark:text-green-500 hover:underline"
                                                                     >Create Telemetry</button>
                                                                 </div>
-                                                            </td>
+                                                            </td> */}
                                                         </tr>
                                                     ))
                                                 }
@@ -225,6 +239,10 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
+            {
+                showModal &&
+                <Invoice vinId={vin} showModal={showModal} setShowModal={setShowModal} />
+            }
         </div>
     );
 };
